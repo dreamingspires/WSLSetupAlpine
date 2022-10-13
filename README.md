@@ -105,7 +105,7 @@ You will find in the `build_files` in this repo a file called `startup.sh`. Copy
 
 ### Add doas permissions to wheel
 
-in `/etc/doas.conf` add the line:
+in `/etc/doas.d/doas.conf` add the line:
 
 `permit persist :wheel as root`
 

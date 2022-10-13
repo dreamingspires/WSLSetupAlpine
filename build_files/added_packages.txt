@@ -7,5 +7,7 @@ python3-dev
 sqlite-dev
 npm
 openssh-keygen
+doas
+openssh-client
 
 wormhole-william (testing)
