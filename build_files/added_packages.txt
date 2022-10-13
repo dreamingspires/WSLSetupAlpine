@@ -3,9 +3,9 @@ git
 poetry
 python3-flit
 gcc
-python3-devel
-sqlite-devel
-python3-pytest
+python3-dev
+sqlite-dev
 npm
+openssh-keygen
 
-sudo dnf install -y nano git poetry python3-flit gcc python3-devel sqlite-devel python3-pytest npm
+wormhole-william (testing)

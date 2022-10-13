@@ -20,6 +20,13 @@ Open PowerShell as Administrator and run:
 2. Restart your computer when prompted
 ###### &nbsp;
 
+Also add the feature Virtual Machine Platform via whichever method
+
+
+Enable WSL2 with installer [here](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)
+
+`wsl --set-default-version 2`
+
 This repo allows you to make your own WSL installer to the Dreaming Spires specification, with a user. 
 ### **If you wish to download a pre-built version of this package please [click here](https://github.com/dreamingspires/WSLSetup/releases/latest)**. 
 
@@ -27,25 +34,25 @@ Otherwise, read on.
 
 # Part 2: Re-create the WSL installer (optional, skip if you downloaded the pre-built version)
 
-## **Step 1:** Download the Fedora 33 file
-[Download here](https://kojipkgs.fedoraproject.org//packages/Fedora-Container-Base/33)
+## **Step 1:** Download the Alpine file
+https://www.alpinelinux.org/downloads/
 
-Go to `"current-date".0/images/Fedora-Container-Base-33-"current-date".0.x86_64.tar.xz`
 
-Or, if you're lazy, get an older file directly from [here](https://kojipkgs.fedoraproject.org//packages/Fedora-Container-Base/33/20201216.0/images/Fedora-Container-Base-33-20201216.0.x86_64.tar.xz).
+[Download here](https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-minirootfs-3.16.2-x86_64.tar.gz)
 
-Extract the file within this package (e.g. with WinRAR) called layer.tar, and rename it:
 
-`fedora-33-rootfs.tar`
+Extract the file within this package (e.g. with 7Zip) called alpine-minirootfs...etc.tar, and rename it:
+
+`alpine-minirootfs.tar`
 
 ###### &nbsp;
-## **Step 2:** Install fedora into WSL
+## **Step 2:** Install alpine into WSL
 
 ### **Make a directory where you wish to put your WSL distribution**
 
 e.g. in powershell
 
-`mkdir $HOME\wsl\fedora` 
+`mkdir $HOME\wsl\alpine` 
 ###### &nbsp;
 ### **Import into WSL**
 
@@ -53,16 +60,16 @@ Assuming all of the above steps are complete, you are ready to import your distr
 
 Here I have used:
 
-* Chosen name of distribution (this can be anything you like): `fedora`
+* Chosen name of distribution (this can be anything you like): `alpine`
 
-* Destination directory: `$HOME\wsl\fedora`
+* Destination directory: `$HOME\wsl\alpine`
 
-* Unpacked fedora-33 file: `$HOME\Downloads\fedora-33-rootfs.tar`
+* Unpacked alpine file: `$HOME\Downloads\alpine-minirootfs.tar`
 
 
 In powershell:
 
-`wsl --import fedora $HOME\wsl\fedora $HOME\Downloads\fedora-33-rootfs.tar`
+`wsl --import alpine $HOME\wsl\alpine $HOME\Downloads\alpine-minirootfs.tar`
 
 To check this has worked:
 
@@ -72,33 +79,35 @@ which will list your available WSL distros.
 
 If this is your first distro, this will automatically be default. Otherwise run:
 
-`wsl -s fedora`
+`wsl -s alpine`
 
 to set as default.
 
 ###### &nbsp;
-## **Step 3:** Set up Fedora for Dreaming Spires
+## **Step 3:** Set up Alpine for Dreaming Spires
 
 To enter your WSL, in powershell enter:
 
-`wsl -d fedora`
+`wsl -d alpine`
 
 Note: *Do* ***not*** *make a user here - we want this package to be a clean as possible*
 
 ### **Install necessary packages**
 
-`dnf install -y nano git poetry python3-flit gcc python3-devel sqlite-devel python3-pytest npm`
+`apk add nano git poetry npm gcc python3-dev sqlite-dev openssh-keygen doas openssh-client`
+
+`apk add wormhole-william --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/`
 
 ### **Copy in** `startup.sh`
 You will find in the `build_files` in this repo a file called `startup.sh`. Copy this file to:
 
 `/home/startup.sh`
 
-### **Clean Package Install Materials**
-This will reduce the size of the final package *significantly*.
+### Add doas permissions to wheel
 
-`dnf clean all`
+in `/etc/doas.conf` add the line:
 
+`permit persist :wheel as root`
 
 To leave WSL enter:
 
@@ -110,7 +119,7 @@ To leave WSL enter:
 ### **Export the distro to a .tar file**
 In powershell:
 
-`wsl --export fedora $HOME\Downloads\dreaming.tar`
+`wsl --export alpine $HOME\Downloads\dreaming.tar`
 
 ### **Make the package**
 
@@ -140,7 +149,7 @@ Enter the path to the `dreaming.tar` file which came in the package. This might 
 ### **Enter path to distro**
 This is the path where you wish your distro to go. It does not have to exist (No spaces in the new bit please!), but if it does exist, ensure the folder is empty. This might look something like:
 
-`C:\Users\Mark\wsl\fedora`
+`C:\Users\Mark\wsl\alpine`
 
 Note: *The program will most likely hang for a moment after this command - this is normal.*
 
@@ -168,13 +177,10 @@ Click "Add SSH Key"
 
 ### **Configure VS Code to boot into WSL**
 
-Copy the line provided (that starts `"terminal.integrated.shell.windows"`)
+1. Install the WSL Vs Code Extension.
 
-Press enter (This should open your settings.json file - if not, see below)
-* If your settings.json did not open, navigate to something like:
-    `C:\Users\Mark\AppData\Roaming\Code\User\settings.json`,
-    or it can be accessed through VS Code. In VS Code perform Ctrl+Shift+P to open the command line and do `>Open Settings (JSON)`.
+2. Simply run: `code .` in wsl
 
-Paste this line into your settings.json file - if one already labelled this exists replace it.
+This should boot a window running vs code inside WSL!
 
 Now, in VS Code just do Terminal -> New Terminal. If all has gone well, and you didn't ***use any spaces*** you'll be in WSL at the location set by VS Code!
