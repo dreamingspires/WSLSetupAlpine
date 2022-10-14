@@ -94,9 +94,11 @@ Note: *Do* ***not*** *make a user here - we want this package to be a clean as p
 
 ### **Install necessary packages**
 
-`apk add nano git poetry npm gcc python3-dev sqlite-dev openssh-keygen doas openssh-client`
+`apk add nano git poetry npm gcc python3-dev sqlite-dev openssh-keygen doas openssh-client less`
 
 `apk add wormhole-william --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/`
+
+`apk add pre-commit --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/`
 
 ### **Copy in** `startup.sh`
 You will find in the `build_files` in this repo a file called `startup.sh`. Copy this file to:
